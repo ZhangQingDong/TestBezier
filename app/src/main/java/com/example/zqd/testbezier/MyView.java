@@ -43,7 +43,11 @@ public class MyView extends View {
     }
 
     public void setProgress(float progress) {
-        this.progress = progress;
+        if (progress == 100) {
+            this.progress = progress + amplitude;
+        } else {
+            this.progress = progress;
+        }
         path.reset();
     }
 
