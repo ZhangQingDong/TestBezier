@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -21,28 +23,45 @@ import android.view.View;
  */
 public class MyView extends View {
 
-    Paint wavePaint;
-    Paint circlePaint;
+    /**
+     * 波浪画笔
+     */
+    private Paint wavePaint;
+    /**
+     * 圆圈画笔
+     */
+    private Paint circlePaint;
+    /**
+     * 文字画笔
+     */
+    private Paint textPaint;
+    /**
+     * 控件宽度
+     */
     private int screenWidth;
+    /**
+     * 控件高度
+     */
     private int screenHeignt;
     private int amplitude = 100;
     private Path path;
+    /**
+     * 进度
+     */
     private float progress = 0;
+    private float textProgress = 0;
+    /**
+     * 起始点
+     */
     private Point startPoint = new Point();
 
-    public int getAmplitude() {
-        return amplitude;
-    }
-
-    public void setAmplitude(int amplitude) {
-        this.amplitude = amplitude;
-    }
-
-    public float getProgress() {
-        return progress;
-    }
-
+    /**
+     * 设置进度
+     *
+     * @param progress
+     */
     public void setProgress(float progress) {
+        this.textProgress = progress;
         if (progress == 100) {
             this.progress = progress + amplitude;
         } else {
@@ -72,6 +91,18 @@ public class MyView extends View {
         wavePaint = new Paint();
         wavePaint.setAntiAlias(true);
         wavePaint.setStrokeWidth(1F);
+
+        textPaint = new Paint();
+        textPaint.setStyle(Paint.Style.STROKE);
+        textPaint.setAntiAlias(true);
+        textPaint.setColor(Color.parseColor("#999999"));
+        textPaint.setTextSize(50f);
+
+        circlePaint = new Paint();
+        circlePaint.setAntiAlias(true);
+        circlePaint.setColor(Color.parseColor("#999999"));
+        circlePaint.setStrokeWidth(5F);
+        circlePaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -95,7 +126,21 @@ public class MyView extends View {
         clipCircle(canvas);
         drawCircle(canvas);
         drawWave(canvas);
+        drawText(canvas);
         postInvalidateDelayed(10);
+    }
+
+    /**
+     * 绘制文字
+     *
+     * @param canvas
+     */
+    private void drawText(Canvas canvas) {
+        Rect targetRect = new Rect(0, -screenHeignt, screenWidth, 0);
+        Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+        int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(String.valueOf((int) textProgress + "%"), targetRect.centerX(), baseline, textPaint);
     }
 
     /**
@@ -139,11 +184,6 @@ public class MyView extends View {
      * @param canvas
      */
     private void drawCircle(Canvas canvas) {
-        circlePaint = new Paint();
-        circlePaint.setAntiAlias(true);
-        circlePaint.setColor(Color.parseColor("#666666"));
-        circlePaint.setStrokeWidth(2F);
-        circlePaint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(screenHeignt / 2, screenHeignt / 2, screenHeignt / 2, circlePaint);
     }
 
