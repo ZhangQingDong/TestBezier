@@ -43,6 +43,9 @@ public class MyView extends View {
      * 控件高度
      */
     private int screenHeignt;
+    /**
+     * 振幅
+     */
     private int amplitude = 100;
     private Path path;
     /**
@@ -67,7 +70,6 @@ public class MyView extends View {
         } else {
             this.progress = progress;
         }
-        path.reset();
     }
 
     public MyView(Context context) {
@@ -123,9 +125,21 @@ public class MyView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        /**
+         * 剪裁圆形区域
+         */
         clipCircle(canvas);
+        /**
+         * 画圆边线
+         */
         drawCircle(canvas);
+        /**
+         * 画波浪线
+         */
         drawWave(canvas);
+        /**
+         * 画进度文字
+         */
         drawText(canvas);
         postInvalidateDelayed(10);
     }
